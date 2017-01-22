@@ -1,4 +1,4 @@
-var Action = function() {}
+var Action = function() {};
 
 Action.removeDice = function(game, num, face, player) {
   var numberInHand = this.numberInHand(game.document.playerHands[player], face);
@@ -35,7 +35,7 @@ Action.add = function(game, action, cb) {
       });
     }
   } else if (action.actionType == "challenge") {
-    var result = this.challenge(game, action.challengeNumber, action.challengeFace);
+    result = this.challenge(game, action.challengeNumber, action.challengeFace);
     game.save(function() {
       cb(result);
     });
@@ -72,6 +72,6 @@ Action.numberInHand = function(hand, face) {
     }
     return accumulator;
   }, 0);
-}
+};
 
 module.exports = Action;

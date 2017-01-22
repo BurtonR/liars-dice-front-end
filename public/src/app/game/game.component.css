@@ -1,0 +1,42 @@
+#playerInfo ul{
+  display: inline-flex;
+}
+
+#playerInfo li{
+  padding-right: 20px;
+}
+
+.strike {
+  text-decoration: line-through;
+}
+
+#diceOnBoard {
+  border-color: #78ba00;
+  border-radius: 20px;
+}
+
+#diceInHand li, #diceOnBoard li{
+  display: inline-block;
+  list-style: none;
+  width: 12%;
+}
+
+#diceInHand img, #diceOnBoard img {
+  width: 100%
+}
+
+figure {
+  width: 80%;
+}
+
+.selected {
+  background-color: green;
+  padding-left: 4px;
+  padding-top: 4px;
+  border-radius: 12px;
+}
+
+#biddingArea input{
+  width: 10%;
+  padding-right: 5px;
+}

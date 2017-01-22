@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Host front end app static files...
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public/dist'));
 
 app.get('/', function(req, res) {
   res.render('documentation', {});
@@ -48,7 +48,7 @@ app.post('/games/:id/claim', function(req, res) {
       claimFace: parseInt(req.body.claimFace),
       player: parseInt(req.body.player),
       moveFace: parseInt(req.body.moveFace),
-      moveNumber: parseInt(req.body.moveNumber),
+      moveNumber: parseInt(req.body.moveNumber)
     }, function() {
       res.json(game);
     });

@@ -1,0 +1,90 @@
+<div class="row">
+  <div class="center-align">
+    <ul id="playerInfo">
+      <li *ngFor="let player of playerArray; let i = index"><b>Player {{i + 1}}</b> claims:
+        <ul>
+          <li class="chip" *ngFor="let claim of playerClaims(i); let ci = index" [ngClass]="{strike: ci > 0}">
+            There <span *ngIf="claim.claimNumber > 1">are</span><span *ngIf="claim.claimNumber < 2">is</span> {{claim.claimNumber}} {{claim.claimFace}}
+            <span *ngIf="claim.claimNumber > 1">'s</span>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div *ngIf="currentPlayer == 0">
+  <a class="btn-large green" (click)="openModal()">Start</a>
+</div>
+
+<div class="row">
+  <div id="gameBoard" class="center-align">
+    <ul id="diceOnBoard">
+      <li *ngFor="let boardDie of diceOnBoard; let i = index">
+        <figure>
+          <div>
+            <img src="../../assets/die_face_{{boardDie}}.svg" alt="Dice with #{{boardDie}}">
+          </div>
+        </figure>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+  <div id="claimArea" *ngIf="game?.actions[0]?.actionType == 'claim'">
+    <div class="center-align">
+      <h4>Player {{currentClaim.player + 1}} claims that there <span *ngIf="currentClaim.claimNumber > 1">are</span><span *ngIf="currentClaim.claimNumber < 2">is</span> {{currentClaim.claimNumber}} {{currentClaim.claimFace}}<span *ngIf="currentClaim.claimNumber > 1">'s</span></h4>
+    </div>
+    <div class="center-align">
+      <a class="btn btn-large red" (click)="challenge(currentPlayer)">Challenge The Claim!</a>
+    </div>
+  </div>
+  <div id="playerHand" class="center-align" *ngIf="currentPlayer !== 0">
+    <h3>Player {{currentPlayer}}</h3>
+    <br>
+    <div class="row">
+      <div class="center-align">
+        <ul id="diceInHand">
+          <li *ngFor="let die of currentHand; let i = index">
+            <figure>
+              <div (click)="dieForBoard = die">
+                <img src="../../assets/die_face_{{die}}.svg" alt="Dice with #{{die}}" [ngClass]="{selected: dieForBoard == die}">
+              </div>
+            </figure>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+      <div class="center-align">
+        <a class="btn" [ngClass]="{disabled: dieSubmitted}" (click)="submitDieToBoard(dieForBoard)">Place Selected Die on Board</a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="center-align" id="biddingArea">
+        <form (ngSubmit)="makeClaim(claimAmount, claimValue)" #claimForm="ngForm">
+          <label for="bidDiceAmount"># of Dice</label>
+          <input class="validate" type="number" id="bidDiceAmount" name="bidDiceAmount" min="0" required [(ngModel)]="claimAmount">
+          <label for="bidDiceValue">Dice Value</label>
+          <input class="validate" type="number" id="bidDiceValue" name="bidDiceValue" min="1" max="6" required [(ngModel)]="claimValue">
+          <button class="btn waves-effect waves-light" type="submit" name="action" [disabled]="!claimForm.form.valid">Make Claim</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="changePlayerModal" class="modal" materialize="modal" [materializeParams]="[{dismissible: false, opacity: 1}]" [materializeActions]="modalActions">
+  <div class="modal-content">
+    <h4>Switching Players</h4>
+    <p>
+      Click the button below when the next player is ready
+    </p>
+  </div>
+  <div class="modal-footer">
+    <a (click)="switchPlayer(currentPlayer)" class=" modal-action modal-close waves-effect waves-green btn-flat">Ready!</a>
+  </div>
+</div>

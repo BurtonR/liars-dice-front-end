@@ -19,7 +19,7 @@ var Game = function(options) {
     this.document.playerHands = [];
     this.createPlayers();
   }
-}
+};
 
 Game.all = function(cb) {
   var results = [];
@@ -49,7 +49,7 @@ Game.prototype = {
     if (!this.document.numPlayers || !this.document.numDice) {
       cb({
         error: "numPlayers and numDice is required"
-      })
+      });
       return;
     }
 
@@ -77,6 +77,6 @@ Game.prototype = {
       }
     }
   }
-}
+};
 
 module.exports = Game;
