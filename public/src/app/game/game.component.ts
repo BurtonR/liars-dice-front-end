@@ -40,6 +40,7 @@ export class GameComponent implements OnInit {
     this.gameService.GetDetails(gameId).subscribe((game: Game) => {
       this.game = game;
       this.playerArray = Array(game.numPlayers);
+      this.openModal();
     });
   }
 

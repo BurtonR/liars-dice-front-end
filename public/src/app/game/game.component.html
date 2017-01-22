@@ -1,3 +1,14 @@
+<nav>
+  <div class="nav-wrapper center-align">
+    <ul id="nav-mobile" class="hide-on-med-and-down">
+      <li>Game: {{game?._id}}</li>
+      <li>Players: {{game?.numPlayers}}</li>
+      <li>Dice in play: {{game?.numDice}}</li>
+      <li>Current Player: {{currentPlayer}}</li>
+    </ul>
+  </div>
+</nav>
+
 <div class="row">
   <div class="center-align">
     <ul id="playerInfo">
@@ -14,10 +25,6 @@
 </div>
 
 <div class="divider"></div>
-
-<div *ngIf="currentPlayer == 0">
-  <a class="btn-large green" (click)="openModal()">Start</a>
-</div>
 
 <div class="row">
   <div id="gameBoard" class="center-align">
@@ -36,7 +43,10 @@
 <div class="row">
   <div id="claimArea" *ngIf="game?.actions[0]?.actionType == 'claim'">
     <div class="center-align">
-      <h4>Player {{currentClaim.player + 1}} claims that there <span *ngIf="currentClaim.claimNumber > 1">are</span><span *ngIf="currentClaim.claimNumber < 2">is</span> {{currentClaim.claimNumber}} {{currentClaim.claimFace}}<span *ngIf="currentClaim.claimNumber > 1">'s</span></h4>
+      <h4>Player {{currentClaim.player + 1}} claims that there <span *ngIf="currentClaim.claimNumber > 1">are</span>
+        <span *ngIf="currentClaim.claimNumber < 2">is</span> {{currentClaim.claimNumber}} {{currentClaim.claimFace}}
+        <span *ngIf="currentClaim.claimNumber > 1">'s</span>
+      </h4>
     </div>
     <div class="center-align">
       <a class="btn btn-large red" (click)="challenge(currentPlayer)">Challenge The Claim!</a>

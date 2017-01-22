@@ -1,3 +1,7 @@
+nav li{
+  padding-left: 20px;
+}
+
 #playerInfo ul{
   display: inline-flex;
 }
