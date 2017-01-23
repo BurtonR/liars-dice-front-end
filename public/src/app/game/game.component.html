@@ -87,7 +87,7 @@
   </div>
 </div>
 
-<div id="changePlayerModal" class="modal" materialize="modal" [materializeParams]="[{dismissible: false, opacity: 1}]" [materializeActions]="modalActions">
+<div id="changePlayerModal" class="modal" materialize="modal" [materializeParams]="[{dismissible: false, opacity: 1}]" [materializeActions]="changePlayerModal">
   <div class="modal-content">
     <h4>Switching Players</h4>
     <p>
@@ -96,5 +96,77 @@
   </div>
   <div class="modal-footer">
     <a (click)="switchPlayer(currentPlayer)" class=" modal-action modal-close waves-effect waves-green btn-flat">Ready!</a>
+  </div>
+</div>
+
+<div id="invalidClaimModal" class="modal" materialize="modal" [materializeActions]="invalidClaimModal">
+  <div class="modal-content">
+    <h4>Invalid Claim</h4>
+    <p>
+      You must make a claim with either a higher amount of die, or a different face value.
+    </p>
+  </div>
+  <div class="modal-footer">
+    <a class=" modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
+  </div>
+</div>
+
+<div id="challengeModal" class="modal" materialize="modal" [materializeActions]="challengeModal">
+  <div class="modal-content">
+    <div id="winner" *ngIf="!accurateClaim">
+      <h3 >Congratulations!</h3>
+      <p>
+        Player {{currentClaim?.player + 1}}'s claim that there <span *ngIf="currentClaim?.claimNumber > 1">are</span>
+        <span *ngIf="currentClaim?.claimNumber < 2">is</span> {{currentClaim?.claimNumber}} {{currentClaim?.claimFace}}
+        <span *ngIf="currentClaim?.claimNumber > 1">'s</span>
+        was incorrect.
+      </p>
+      <p>
+        You won the challenge!
+      </p>
+    </div>
+    <div id="loser" *ngIf="accurateClaim">
+      <h3>Sorry, you've lost this game</h3>
+      <p>
+        Player {{currentClaim?.player + 1}}'s claim that there <span *ngIf="currentClaim?.claimNumber > 1">are</span>
+        <span *ngIf="currentClaim?.claimNumber < 2">is</span> {{currentClaim?.claimNumber}} {{currentClaim?.claimFace}}
+        <span *ngIf="currentClaim?.claimNumber > 1">'s</span>
+        was correct.
+      </p>
+      <p>
+        You did not win this challenge. Redeem yourself on the next game!
+      </p>
+    </div>
+  </div>
+  <div class="center-align">
+    <ul id="allHands">
+      <li>
+        <b>Board</b>
+        <ul>
+          <li *ngFor="let die of game?.board">
+            <figure>
+              <div>
+                <img src="../../assets/die_face_{{die}}.svg" alt="Dice with #{{die}}">
+              </div>
+            </figure>
+          </li>
+        </ul>
+      </li>
+      <li *ngFor="let hand of game?.playerHands; let i = index">
+        <b>Player {{i + 1}}'s hand</b>
+          <ul>
+            <li *ngFor="let die of game?.playerHands[i]">
+              <figure>
+                <div>
+                  <img src="../../assets/die_face_{{die}}.svg" alt="Dice with #{{die}}">
+                </div>
+              </figure>
+            </li>
+          </ul>
+      </li>
+    </ul>
+  </div>
+  <div class="modal-footer">
+    <a class=" modal-action modal-close waves-effect waves-green btn-flat" href="#">New Game</a>
   </div>
 </div>

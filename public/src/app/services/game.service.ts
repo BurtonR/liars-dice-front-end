@@ -38,4 +38,9 @@ export class GameService {
         return Observable.throw('Could not make claim. Error: ' + error)
       })
   }
-}
+
+  challengeClaim(gameId: string, player: number): Observable<boolean> {
+    return this.http.post(`${this.gameUrl}/${gameId}/challenge`, JSON.stringify({player: player}), {headers: this.headers})
+      .map((response: Response) => {return response.json()})
+    }
+  }

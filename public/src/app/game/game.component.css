@@ -44,3 +44,12 @@ figure {
   width: 10%;
   padding-right: 5px;
 }
+
+#allHands img{
+  width: 100%;
+}
+
+#allHands li{
+  width: 25%;
+  display: inline-table;
+}
