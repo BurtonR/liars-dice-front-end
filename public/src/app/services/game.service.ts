@@ -18,7 +18,6 @@ export class GameService {
     return this.http.post(this.gameUrl, JSON.stringify({numPlayers: players, numDice: die}), {headers: this.headers})
       .map((response: Response) => {return response.json()})
       .catch((error: any) => {
-        console.log('Error creating game: ' + error);
         return Observable.throw(error);
       })
   }
@@ -27,7 +26,7 @@ export class GameService {
     return this.http.get(this.gameUrl + '/' + gameId)
       .map((response: Response) => {return response.json()})
       .catch((error: any) => {
-        return Observable.throw('Unable to find game: ' + gameId + ' Error: ' + error)
+        return Observable.throw(error)
       });
   }
 
@@ -35,12 +34,15 @@ export class GameService {
     return this.http.post(this.gameUrl + '/' + gameId + '/claim', JSON.stringify(claim), {headers: this.headers})
       .map((response: Response) => {return response.json().document})
       .catch((error: any) => {
-        return Observable.throw('Could not make claim. Error: ' + error)
+        return Observable.throw(error)
       })
   }
 
   challengeClaim(gameId: string, player: number): Observable<boolean> {
     return this.http.post(`${this.gameUrl}/${gameId}/challenge`, JSON.stringify({player: player}), {headers: this.headers})
       .map((response: Response) => {return response.json()})
+      .catch((error: any) => {
+        return Observable.throw(error)
+      })
     }
   }

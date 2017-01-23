@@ -6,7 +6,6 @@ import {Game} from "../models/gameModel";
 import {Claim} from "../models/claimModel";
 import {MaterializeAction} from "angular2-materialize";
 import {Action} from "../models/actionModel";
-import {convertPropertyBinding} from "@angular/compiler/src/compiler_util/expression_converter";
 
 @Component ({
   selector: 'game',
@@ -46,7 +45,9 @@ export class GameComponent implements OnInit {
       this.game = game;
       this.playerArray = Array(game.numPlayers);
       this.openModal(this.changePlayerModal);
-    })
+    }, (error: any) => {
+      console.log(`There was an error getting the game details: ${error._body}`);
+    });
   }
 
   switchPlayer(switchFrom: number): void {
@@ -91,6 +92,8 @@ export class GameComponent implements OnInit {
           this.claimAmount = 0;
           this.claimValue = 0;
           this.openModal(this.changePlayerModal);
+        }, (error: any) => {
+          console.log(`There was an error making a claim: ${error._body}`);
         });
     } else {
       this.openModal(this.invalidClaimModal);
@@ -116,7 +119,9 @@ export class GameComponent implements OnInit {
       .subscribe((result: boolean) => {
       this.accurateClaim = result;
       this.openModal(this.challengeModal);
-    });
+    }, (error: any) => {
+        console.log(`There was an error submitting the challenge: ${error._body}`);
+      });
   }
 
   playerClaims(player: number): Claim[]{
