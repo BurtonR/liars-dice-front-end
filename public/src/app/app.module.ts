@@ -8,6 +8,7 @@ import {Routes, RouterModule} from "@angular/router";
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {GameComponent} from "./game/game.component";
 import {GameService} from "./services/game.service";
+import {EventHandlerComponent} from "./event-handler/event-handler.component";
 
 const liarsDiceRoutes: Routes = [
   { path: '', component: DashboardComponent },
@@ -18,7 +19,8 @@ const liarsDiceRoutes: Routes = [
   declarations: [
     AppComponent,
     DashboardComponent,
-    GameComponent
+    GameComponent,
+    EventHandlerComponent
   ],
   imports: [
     BrowserModule,

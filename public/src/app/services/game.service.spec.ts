@@ -105,7 +105,7 @@ describe('Game Service', () => {
     testClaim.moveNumber = 2;
     testClaim.moveFace = 6;
 
-    service.makeClaim(testGameId, testClaim).subscribe(result => {
+    service.MakeClaim(testGameId, testClaim).subscribe(result => {
       expect(result._id).toEqual(testGameId);
       expect(result.actions[0]).toBeTruthy();
       expect(result.actions[0].actionType).toEqual('claim');
@@ -116,7 +116,7 @@ describe('Game Service', () => {
     let testGameId = 'TestGame';
     let testPlayer = 1;
 
-    service.challengeClaim(testGameId, testPlayer).subscribe(result => {
+    service.ChallengeClaim(testGameId, testPlayer).subscribe(result => {
       expect(result).toEqual(true)
     });
   });

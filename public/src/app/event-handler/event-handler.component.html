@@ -1,0 +1,16 @@
+<div [ngSwitch]="model?.HasError" class="center-align">
+  <div *ngSwitchCase="false" class="info">
+    <legend class="center-align">Info</legend>
+    <br>
+    <div class="alert-info">
+      {{model.Message}}
+    </div>
+  </div>
+  <div *ngSwitchCase="true" class="error">
+    <legend class="center-align">Error!</legend>
+    <br>
+    <div class="alert-error">
+      {{model.Message}}
+    </div>
+  </div>
+</div>

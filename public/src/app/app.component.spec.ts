@@ -4,18 +4,37 @@ import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import {RouterTestingModule} from "@angular/router/testing";
+import {EventHandlerComponent} from "./event-handler/event-handler.component";
+import {GameService} from "./services/game.service";
+import {Http, BaseRequestOptions, XHRBackend} from "@angular/http";
+import {MockBackend} from "@angular/http/testing";
 
 describe('App: Public', () => {
   beforeEach(() => {
 
     TestBed.configureTestingModule({
       declarations: [
-        AppComponent
+        AppComponent,
+        EventHandlerComponent
       ],
       imports: [
         FormsModule,
         RouterTestingModule
-      ]
+      ],
+      providers: [
+        BaseRequestOptions,
+        MockBackend,
+        GameService,
+        {
+          deps: [
+            MockBackend,
+            BaseRequestOptions],
+          provide: Http, useFactory: (
+          backend: XHRBackend,
+          defaultOptions: BaseRequestOptions) => {
+          return new Http(backend, defaultOptions);
+        }}
+        ]
     });
   });
 

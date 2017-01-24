@@ -14,7 +14,7 @@ import {Action} from "../models/actionModel";
 })
 
 export class GameComponent implements OnInit {
-  private game: Game;
+  game: Game;
   dieForBoard: number;
   diceOnBoard: number[] = [];
   playerArray: number[];
@@ -45,8 +45,6 @@ export class GameComponent implements OnInit {
       this.game = game;
       this.playerArray = Array(game.numPlayers);
       this.openModal(this.changePlayerModal);
-    }, (error: any) => {
-      console.log(`There was an error getting the game details: ${error._body}`);
     });
   }
 
@@ -85,15 +83,13 @@ export class GameComponent implements OnInit {
     claim.moveFace = this.dieForBoard;
 
     if(this.validClaim(claim, this.currentClaim)){
-      this.gameService.makeClaim(this.game._id, claim)
+      this.gameService.MakeClaim(this.game._id, claim)
         .subscribe((updatedGame: Game) => {
           this.game = updatedGame;
           this.currentClaim = updatedGame.actions.filter(x => x.actionType == 'claim')[0];
           this.claimAmount = 0;
           this.claimValue = 0;
           this.openModal(this.changePlayerModal);
-        }, (error: any) => {
-          console.log(`There was an error making a claim: ${error._body}`);
         });
     } else {
       this.openModal(this.invalidClaimModal);
@@ -115,13 +111,11 @@ export class GameComponent implements OnInit {
   }
 
   challenge(player: number): void {
-    this.gameService.challengeClaim(this.game._id, player)
+    this.gameService.ChallengeClaim(this.game._id, player)
       .subscribe((result: boolean) => {
       this.accurateClaim = result;
       this.openModal(this.challengeModal);
-    }, (error: any) => {
-        console.log(`There was an error submitting the challenge: ${error._body}`);
-      });
+    });
   }
 
   playerClaims(player: number): Claim[]{

@@ -1,0 +1,17 @@
+div.error, div.info {
+  width: 10%;
+  margin: auto;
+}
+
+div.legend {
+  font-size: 1em;
+  font-weight: 700;
+}
+
+div.alert-info {
+  color: mediumblue;
+}
+
+div.alert-error {
+  color: red;
+}

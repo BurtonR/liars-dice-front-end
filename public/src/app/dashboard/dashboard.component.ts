@@ -23,9 +23,6 @@ export class DashboardComponent implements OnInit {
       .subscribe(game => {
         console.log('New Game Id: ' + game._id);
         this.router.navigate(['/game/', game._id])
-      },
-      err => {
-        console.log('There was an error on createGame: ' + err._body);
       });
   }
 }
