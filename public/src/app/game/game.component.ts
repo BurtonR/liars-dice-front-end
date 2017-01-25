@@ -15,7 +15,7 @@ import {Action} from "../models/actionModel";
 
 export class GameComponent implements OnInit {
   game: Game;
-  dieForBoard: number;
+  dieForBoard: number[] = [];
   claimAmount: number;
   claimValue: number;
   dieSubmitted: boolean;
@@ -23,7 +23,6 @@ export class GameComponent implements OnInit {
   changePlayerModal = new EventEmitter<string|MaterializeAction>();
   invalidClaimModal = new EventEmitter<string|MaterializeAction>();
   challengeModal = new EventEmitter<string|MaterializeAction>();
-  playerArray: number[];
 
   constructor(private route: ActivatedRoute,
               private gameService: GameService)
@@ -47,7 +46,7 @@ export class GameComponent implements OnInit {
   switchPlayer(): void {
     this.gameService.ChangePlayer().subscribe((game: Game) => {
       this.game = game;
-      this.dieForBoard = 0;
+      this.dieForBoard = [];
       this.dieSubmitted = false;
     });
   }
@@ -58,7 +57,7 @@ export class GameComponent implements OnInit {
     }
     this.game.currentPlayer.hand.forEach(selected => {
       if(selected === dieValue) {
-        this.game.board.push(selected);
+        this.dieForBoard.push(selected);
       }
     });
 
@@ -69,8 +68,8 @@ export class GameComponent implements OnInit {
     let claim = new Claim({
       claimNumber: numDice,
       claimFace: diceValue,
-      moveNumber: this.game.currentPlayer.hand.filter(d => d === this.dieForBoard).length,
-      moveFace: this.dieForBoard
+      moveNumber: this.dieForBoard.length,
+      moveFace: this.dieForBoard[0]
     });
 
     this.gameService.MakeClaim(claim)
@@ -80,9 +79,8 @@ export class GameComponent implements OnInit {
         this.claimValue = 0;
         this.openModal(this.changePlayerModal);
       });
-    }
+  }
 
-  //TODO: Change this call to no parameters. Assume current player in service
   challenge(): void {
     this.gameService.ChallengeClaim()
       .subscribe((result: boolean) => {

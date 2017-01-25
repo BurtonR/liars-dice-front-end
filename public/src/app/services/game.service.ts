@@ -9,11 +9,11 @@ import {Player} from "../models/playerModel";
 @Injectable()
 export class GameService {
 
-  private game: Game;
   private gameUrl: string = 'http://localhost:8080/games';
   private headers = new Headers({'Content-Type': 'application/json'});
   private events: Subject<Event>;
-  public EventsStream$: Observable<Event>;
+  game: Game;
+  EventsStream$: Observable<Event>;
 
   constructor(private http: Http) {
     this.events = new Subject<Event>();
@@ -77,7 +77,6 @@ export class GameService {
 
     //update Game Players first
     if(currentPlayer) {
-      console.log('saving to players');
       this.game.players[currentPlayer.number - 1] = currentPlayer;
     }
 
