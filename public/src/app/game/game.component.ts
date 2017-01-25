@@ -16,18 +16,14 @@ import {Action} from "../models/actionModel";
 export class GameComponent implements OnInit {
   game: Game;
   dieForBoard: number;
-  diceOnBoard: number[] = [];
-  playerArray: number[];
-  currentPlayer: number = 0;
-  currentHand: number[];
   claimAmount: number;
   claimValue: number;
   dieSubmitted: boolean;
-  currentClaim: Action;
   accurateClaim: boolean;
   changePlayerModal = new EventEmitter<string|MaterializeAction>();
   invalidClaimModal = new EventEmitter<string|MaterializeAction>();
   challengeModal = new EventEmitter<string|MaterializeAction>();
+  playerArray: number[];
 
   constructor(private route: ActivatedRoute,
               private gameService: GameService)
@@ -43,30 +39,26 @@ export class GameComponent implements OnInit {
   getGameDetails(gameId: string): void {
     this.gameService.GetDetails(gameId).subscribe((game: Game) => {
       this.game = game;
-      this.playerArray = Array(game.numPlayers);
+      // this.playerArray = Array(game.numPlayers);
       this.openModal(this.changePlayerModal);
     });
   }
 
-  switchPlayer(switchFrom: number): void {
-    if(switchFrom === this.playerArray.length){
-      this.currentPlayer = 1;
-    } else {
-      this.currentPlayer++;
-    }
-
-    this.currentHand = this.game.playerHands[this.currentPlayer - 1];
-    this.dieForBoard = 0;
-    this.dieSubmitted = false;
+  switchPlayer(): void {
+    this.gameService.ChangePlayer().subscribe((game: Game) => {
+      this.game = game;
+      this.dieForBoard = 0;
+      this.dieSubmitted = false;
+    });
   }
 
   submitDieToBoard(dieValue: number): void {
     if(dieValue === 0){
       return;
     }
-    this.currentHand.forEach(selected => {
+    this.game.currentPlayer.hand.forEach(selected => {
       if(selected === dieValue) {
-        this.diceOnBoard.push(selected);
+        this.game.board.push(selected);
       }
     });
 
@@ -74,52 +66,29 @@ export class GameComponent implements OnInit {
   }
 
   makeClaim(numDice: number, diceValue: number) {
-    let playerIndex = this.currentPlayer - 1;
-    let claim = new Claim(playerIndex);
+    let claim = new Claim({
+      claimNumber: numDice,
+      claimFace: diceValue,
+      moveNumber: this.game.currentPlayer.hand.filter(d => d === this.dieForBoard).length,
+      moveFace: this.dieForBoard
+    });
 
-    claim.claimNumber = numDice;
-    claim.claimFace = diceValue;
-    claim.moveNumber = this.currentHand.filter(d => d === this.dieForBoard).length;
-    claim.moveFace = this.dieForBoard;
-
-    if(this.validClaim(claim, this.currentClaim)){
-      this.gameService.MakeClaim(this.game._id, claim)
-        .subscribe((updatedGame: Game) => {
-          this.game = updatedGame;
-          this.currentClaim = updatedGame.actions.filter(x => x.actionType == 'claim')[0];
-          this.claimAmount = 0;
-          this.claimValue = 0;
-          this.openModal(this.changePlayerModal);
-        });
-    } else {
-      this.openModal(this.invalidClaimModal);
-    }
-  }
-
-  validClaim(proposedClaim: Claim, currentClaim: Claim): boolean {
-    if(!currentClaim) {
-      return true;
+    this.gameService.MakeClaim(claim)
+      .subscribe((updatedGame: Game) => {
+        this.game = updatedGame;
+        this.claimAmount = 0;
+        this.claimValue = 0;
+        this.openModal(this.changePlayerModal);
+      });
     }
 
-    if(proposedClaim.claimNumber < currentClaim.claimNumber){
-      return false;
-    } else if(proposedClaim.claimNumber === currentClaim.claimNumber) {
-      return proposedClaim.claimFace > currentClaim.claimFace;
-    } else if( proposedClaim.claimNumber > currentClaim.claimNumber) {
-      return true;
-    }
-  }
-
-  challenge(player: number): void {
-    this.gameService.ChallengeClaim(this.game._id, player)
+  //TODO: Change this call to no parameters. Assume current player in service
+  challenge(): void {
+    this.gameService.ChallengeClaim()
       .subscribe((result: boolean) => {
       this.accurateClaim = result;
       this.openModal(this.challengeModal);
     });
-  }
-
-  playerClaims(player: number): Claim[]{
-    return this.game.actions.filter(x => x.actionType == 'claim' && x.player == player);
   }
 
   openModal(modal: EventEmitter<string|MaterializeAction>) {

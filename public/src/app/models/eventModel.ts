@@ -3,9 +3,9 @@ export class Event {
   Code: number;
   Message: string;
 
-  constructor(hasError?: boolean, code?: number, message?: string) {
-    this.HasError = hasError || false;
-    this.Code = code || 0;
-    this.Message = message || '';
+  constructor(obj?: any) {
+    this.HasError = obj && obj.HasError || false;
+    this.Code = obj && obj.Code || 0;
+    this.Message = obj && obj.Message || '';
   }
 }

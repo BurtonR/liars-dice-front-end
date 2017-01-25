@@ -1,6 +1,7 @@
 import {Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GameService } from '../services/game.service';
+import {Game} from "../models/gameModel";
 
 @Component({
   selector: 'dashboard',
@@ -20,7 +21,7 @@ export class DashboardComponent implements OnInit {
 
   createGame(): void {
     this.gameService.CreateGame(this.players, this.die)
-      .subscribe(game => {
+      .subscribe((game: Game) => {
         console.log('New Game Id: ' + game._id);
         this.router.navigate(['/game/', game._id])
       });

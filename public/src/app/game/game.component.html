@@ -4,7 +4,7 @@
       <li>Game: {{game?._id}}</li>
       <li>Players: {{game?.numPlayers}}</li>
       <li>Dice in play: {{game?.numDice}}</li>
-      <li>Current Player: {{currentPlayer}}</li>
+      <li>Current Player: {{game?.currentPlayer?.number}}</li>
     </ul>
   </div>
 </nav>
@@ -12,9 +12,9 @@
 <div class="row">
   <div class="center-align">
     <ul id="playerInfo">
-      <li *ngFor="let player of playerArray; let i = index"><b>Player {{i + 1}}</b> claims:
+      <li *ngFor="let player of game?.players"><b>Player {{player.number}}</b> claims:
         <ul>
-          <li class="chip" *ngFor="let claim of playerClaims(i); let ci = index" [ngClass]="{strike: ci > 0}">
+          <li class="chip" *ngFor="let claim of player.claims; let ci = index" [ngClass]="{strike: ci > 0}">
             There <span *ngIf="claim.claimNumber > 1">are</span><span *ngIf="claim.claimNumber < 2">is</span> {{claim.claimNumber}} {{claim.claimFace}}
             <span *ngIf="claim.claimNumber > 1">'s</span>
           </li>
@@ -29,7 +29,7 @@
 <div class="row">
   <div id="gameBoard" class="center-align">
     <ul id="diceOnBoard">
-      <li *ngFor="let boardDie of diceOnBoard; let i = index">
+      <li *ngFor="let boardDie of game?.board">
         <figure>
           <div>
             <img src="../../assets/die_face_{{boardDie}}.svg" alt="Dice with #{{boardDie}}">
@@ -41,24 +41,24 @@
 </div>
 
 <div class="row">
-  <div id="claimArea" *ngIf="game?.actions[0]?.actionType == 'claim'">
+  <div id="claimArea" *ngIf="game?.currentClaim">
     <div class="center-align">
-      <h4>Player {{currentClaim.player + 1}} claims that there <span *ngIf="currentClaim.claimNumber > 1">are</span>
-        <span *ngIf="currentClaim.claimNumber < 2">is</span> {{currentClaim.claimNumber}} {{currentClaim.claimFace}}
-        <span *ngIf="currentClaim.claimNumber > 1">'s</span>
+      <h4>Player {{game?.currentClaim.player + 1}} claims that there <span *ngIf="game?.currentClaim.claimNumber > 1">are</span>
+        <span *ngIf="game?.currentClaim.claimNumber < 2">is</span> {{game?.currentClaim.claimNumber}} {{game?.currentClaim.claimFace}}
+        <span *ngIf="game?.currentClaim.claimNumber > 1">'s</span>
       </h4>
     </div>
     <div class="center-align">
-      <a class="btn btn-large red" (click)="challenge(currentPlayer)">Challenge The Claim!</a>
+      <a class="btn btn-large red" (click)="challenge()">Challenge The Claim!</a>
     </div>
   </div>
-  <div id="playerHand" class="center-align" *ngIf="currentPlayer !== 0">
-    <h3>Player {{currentPlayer}}</h3>
+  <div id="playerHand" class="center-align" *ngIf="game?.currentPlayer?.number !== 0">
+    <h3>Player {{game?.currentPlayer?.number}}</h3>
     <br>
     <div class="row">
       <div class="center-align">
         <ul id="diceInHand">
-          <li *ngFor="let die of currentHand; let i = index">
+          <li *ngFor="let die of game?.currentPlayer?.hand; let i = index">
             <figure>
               <div (click)="dieForBoard = die">
                 <img src="../../assets/die_face_{{die}}.svg" alt="Dice with #{{die}}" [ngClass]="{selected: dieForBoard == die}">
@@ -95,7 +95,7 @@
     </p>
   </div>
   <div class="modal-footer">
-    <a (click)="switchPlayer(currentPlayer)" class=" modal-action modal-close waves-effect waves-green btn-flat">Ready!</a>
+    <a (click)="switchPlayer()" class=" modal-action modal-close waves-effect waves-green btn-flat">Ready!</a>
   </div>
 </div>
 
@@ -116,9 +116,9 @@
     <div id="winner" *ngIf="!accurateClaim">
       <h3 >Congratulations!</h3>
       <p>
-        Player {{currentClaim?.player + 1}}'s claim that there <span *ngIf="currentClaim?.claimNumber > 1">are</span>
-        <span *ngIf="currentClaim?.claimNumber < 2">is</span> {{currentClaim?.claimNumber}} {{currentClaim?.claimFace}}
-        <span *ngIf="currentClaim?.claimNumber > 1">'s</span>
+        Player {{game?.currentClaim?.player + 1}}'s claim that there <span *ngIf="game?.currentClaim?.claimNumber > 1">are</span>
+        <span *ngIf="game?.currentClaim?.claimNumber < 2">is</span> {{game?.currentClaim?.claimNumber}} {{game?.currentClaim?.claimFace}}
+        <span *ngIf="game?.currentClaim?.claimNumber > 1">'s</span>
         was incorrect.
       </p>
       <p>
@@ -128,9 +128,9 @@
     <div id="loser" *ngIf="accurateClaim">
       <h3>Sorry, you've lost this game</h3>
       <p>
-        Player {{currentClaim?.player + 1}}'s claim that there <span *ngIf="currentClaim?.claimNumber > 1">are</span>
-        <span *ngIf="currentClaim?.claimNumber < 2">is</span> {{currentClaim?.claimNumber}} {{currentClaim?.claimFace}}
-        <span *ngIf="currentClaim?.claimNumber > 1">'s</span>
+        Player {{game?.currentClaim?.player + 1}}'s claim that there <span *ngIf="game?.currentClaim?.claimNumber > 1">are</span>
+        <span *ngIf="game?.currentClaim?.claimNumber < 2">is</span> {{game?.currentClaim?.claimNumber}} {{game?.currentClaim?.claimFace}}
+        <span *ngIf="game?.currentClaim?.claimNumber > 1">'s</span>
         was correct.
       </p>
       <p>
