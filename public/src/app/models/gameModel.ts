@@ -27,6 +27,7 @@ export class Game {
     this.currentPlayer = obj && obj.currentPlayer || null;
     this.currentClaim = obj && obj.currentClaim || null;
 
+    // set the array of players
     if(this.numPlayers !== 0 && this.playerHands !== []) {
       for(let i = 0; i < this.numPlayers; i++) {
         let newPlayer = new Player({

@@ -48,7 +48,7 @@ export class GameService {
 
     if(GameService.isValidClaim(claim, this.game.currentClaim)) {
       return this.http.post(`${this.gameUrl}/${this.game._id}/claim`, JSON.stringify(claim), {headers: this.headers})
-          .map((response: Response) => {  // TODO: this may be getting a little out of hand...
+          .map((response: Response) => {
             this.game = new Game(response.json().document);
             this.game.currentClaim = claim;
             this.game.players = allPlayers;
@@ -116,7 +116,7 @@ export class GameService {
   }
 
   private handleHttpError(response: Response) {
-    let event = new Event(true);
+    let event = new Event({HasError: true});
 
     console.log(response);
 

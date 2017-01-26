@@ -2,7 +2,7 @@ import {TestBed, fakeAsync, ComponentFixture} from '@angular/core/testing';
 import {GameComponent} from './game.component';
 import {FormsModule} from "@angular/forms";
 import {AppComponent} from "../app.component";
-import {BrowserModule} from "@angular/platform-browser";
+import {BrowserModule, By} from "@angular/platform-browser";
 import {HttpModule, BaseRequestOptions} from "@angular/http";
 import {MaterializeModule} from "angular2-materialize";
 import {RouterTestingModule} from "@angular/router/testing";
@@ -97,6 +97,67 @@ describe('Game Component', () => {
       })
     );
 
+    it('should open switch player modal', () => {
+      let fakeGameId = 'TestGame';
+
+      component.getGameDetails(fakeGameId);
+
+      fixture.detectChanges();
+      let debugElement = fixture.debugElement.query(By.css('#changePlayerModal h4'));
+      let modalH4 = debugElement.nativeElement;
+
+      expect(modalH4.textContent).toContain('Switching Players');
+    });
+
+    it('should show game id in sub-nav', () => {
+      let fakeGameId = 'TestGame';
+
+      component.getGameDetails(fakeGameId);
+
+      fixture.detectChanges();
+      let debugElement = fixture.debugElement.queryAll(By.css('nav li'));
+      let navLi = debugElement[0].nativeElement;
+
+      expect(navLi.textContent).toContain(`Game: ${fakeGameId}`);
+    });
+
+    it('should show number of players in sub-nav', () => {
+      let fakeGameId = 'TestGame';
+
+      component.getGameDetails(fakeGameId);
+
+      fixture.detectChanges();
+      let debugElement = fixture.debugElement.queryAll(By.css('nav li'));
+      let navLi = debugElement[1].nativeElement;
+
+      expect(navLi.textContent).toContain(`Players: ${fakeGame.numPlayers}`);
+    });
+
+    it('should show number of dice in sub-nav', () => {
+      let fakeGameId = 'TestGame';
+
+      component.getGameDetails(fakeGameId);
+
+      fixture.detectChanges();
+      let debugElement = fixture.debugElement.queryAll(By.css('nav li'));
+      let navLi = debugElement[2].nativeElement;
+
+      expect(navLi.textContent).toContain(`Dice in play: ${fakeGame.numDice}`);
+    });
+
+    it('should show current player number in sub-nav', () => {
+      let fakeGameId = 'TestGame';
+
+      component.getGameDetails(fakeGameId);
+      component.game.currentPlayer = new Player({number: 1});
+
+      fixture.detectChanges();
+      let debugElement = fixture.debugElement.queryAll(By.css('nav li'));
+      let navLi = debugElement[3].nativeElement;
+
+      expect(navLi.textContent).toContain('Current Player: 1');
+    });
+
   }); //end of get game details
 
   describe('Switch Player', () => {
@@ -124,6 +185,7 @@ describe('Game Component', () => {
       expect(component.dieForBoard.length).toEqual(0);
       expect(component.dieSubmitted).toBeFalsy();
     });
+
   }); //end of switching players
 
   describe('Submit Die To Board', () => {
@@ -154,29 +216,46 @@ describe('Game Component', () => {
   describe('Make Claim', () => {
 
     it('should open modal on claim submission', fakeAsync(() => {
-      let modalCalled = false;
-      component.openModal = (modal) => {modalCalled = true;};
       let fakePlayer = 1;
       fakeGame.currentPlayer = new Player({number: fakePlayer});
       let fakeNumDice = 4;
       let fakeDiceValue = 6;
 
+      fixture.detectChanges();
       component.makeClaim(fakeNumDice, fakeDiceValue);
+      fixture.detectChanges();
+
+      let debugElement = fixture.debugElement.query(By.css('#invalidClaimModal h4'));
+      let modalH4 = debugElement.nativeElement;
 
       expect(fakeGame.actions.length).toBeGreaterThan(0);
-      expect(modalCalled).toBeTruthy();
+      expect(modalH4.textContent).toContain('Invalid Claim');
       })
     );
+
   }); //end of make claim
 
   describe('Challenge', () => {
-    it('should open challenge/game end modal', () => {
-      let modalCalled = false;
-      component.openModal = (modal) => {modalCalled = true;};
-
+    it('should open challenge/game end modal congrats with inaccurate claim', () => {
       component.challenge();
+      component.accurateClaim = false;
 
-      expect(modalCalled).toBeTruthy();
+      fixture.detectChanges();
+      let debugElement = fixture.debugElement.query(By.css('#challengeModal h3'));
+      let modalH3 = debugElement.nativeElement;
+
+      expect(modalH3.textContent).toContain('Congratulations!');
+    });
+
+    it('should open challenge/game end modal sorry with accurate claim', () => {
+      component.challenge();
+      component.accurateClaim = true;
+
+      fixture.detectChanges();
+      let debugElement = fixture.debugElement.query(By.css('#challengeModal h3'));
+      let modalH3 = debugElement.nativeElement;
+
+      expect(modalH3.textContent).toContain('Sorry, you\'ve lost this game');
     })
 
   }); //end of challenge

@@ -20,70 +20,79 @@ The game should allow the user to:
 * Move dice to the middle, claim a number of dice in hand, or challenge the last player's claim
 * See all moves taken by players in the game
 
-## Setting up the app
 
-1. Clone the repository locally
-2. Make sure you have Node installed (https://nodejs.org/download/)
-3. Run npm install
-4. node index.js
+### Burton R's implementation
+___
+* Download/Clone the project
+* Make sure you have Node installed (https://nodejs.org/download/)
+* Run `npm install` on the `/public` directory
+    * This is the Angular 2 app dependencies
+* Run `npm intall` on the root directory
+    * This is the NodeJs API dependencies
+* Run `npm start` from the root directory
+    * This builds the Angular 2 app and performs WebPack to uglify and minify the files
+    * Also builds the NodeJs API code and executes `node ./index.js` to start the app
 
-The server will run on localhost:8080
+*The server will run on localhost:8080*
+    
+* Test cases exist for the Angular 2 app
+    * In the `/public` directory, run `npm test`
+    * This will start Chrome and a PhantomJS (headless) browser to execute all the unit tests
+    
+Dice images retrieved from [WPClipart](http://www.wpclipart.com/recreation/games/dice/)
+___
 
-## Front end skeleton
+## API Notes
+___
 
-A bare-bones HTML page that loads a bare-bones Angular app and displays a stubbed game is included in the /public folder of the repository. Please place your developed application in this repository.
-
-## Verifying backend API
+### Verifying backend API
 
 There is a Postman collection included test/LiarsDice.json.postman_collection. This file can be loaded into the Chrome app, Postman and demonstrates usage of all the endpoints.
 
-## Endpoints
+### Endpoints
 
-Start a new game
+* Start a new game
 
-```
-POST /games
-  numPlayers: Integer
-  numDice: Integer
-```
+    ```
+    POST /games
+        numPlayers: Integer
+        numDice: Integer
+    ```
 
-Get a single game
+* Get a single game
 
-```
-GET /games/:id
-```
+    ```
+    GET /games/:id
+    ```
 
-List Games
+* List Games
 
-```
-GET /games
-```
+    ```
+    GET /games
+    ```
 
-On a users turn, they can either make a claim and move dice to the middle, or challenge the previous player.
+#### On a users turn, they can either make a claim and move dice to the middle, or challenge the previous player.
 
-Make a claim
+* Make a claim
 
-```
-POST /games/:id/claim
-  player: Integer
-  moveNumber: Integer
-  moveFace: Integer
-  claimNumber: Integer
-  claimFace: Integer
-```
+    ```
+    POST /games/:id/claim
+        player: Integer
+        moveNumber: Integer
+        moveFace: Integer
+        claimNumber: Integer
+        claimFace: Integer
+    ```
 
-Challenge the last move
+* Challenge the last move
 
-```
-POST /games/:id/challenge
-  player: Integer
-```
+    ```
+    POST /games/:id/challenge
+        player: Integer
+    ```
 
 ##Submission
 
 The final submission or any questions related to the excercise should be sent to recruiting@bypassmobile.com
 
 Thanks!
-
-
-Dice images retrieved from [WPClipart](http://www.wpclipart.com/recreation/games/dice/)

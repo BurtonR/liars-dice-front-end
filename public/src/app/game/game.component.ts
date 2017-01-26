@@ -5,7 +5,6 @@ import {GameService} from "../services/game.service";
 import {Game} from "../models/gameModel";
 import {Claim} from "../models/claimModel";
 import {MaterializeAction} from "angular2-materialize";
-import {Action} from "../models/actionModel";
 
 @Component ({
   selector: 'game',
@@ -38,7 +37,6 @@ export class GameComponent implements OnInit {
   getGameDetails(gameId: string): void {
     this.gameService.GetDetails(gameId).subscribe((game: Game) => {
       this.game = game;
-      // this.playerArray = Array(game.numPlayers);
       this.openModal(this.changePlayerModal);
     });
   }

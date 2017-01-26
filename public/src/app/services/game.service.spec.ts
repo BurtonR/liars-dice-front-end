@@ -1,5 +1,5 @@
 
-import {TestBed} from "@angular/core/testing";
+import {TestBed, fakeAsync} from "@angular/core/testing";
 import {GameService} from "./game.service";
 import {Http, BaseRequestOptions, XHRBackend, Response,ResponseOptions} from "@angular/http";
 import {MockBackend, MockConnection} from "@angular/http/testing";
@@ -260,5 +260,35 @@ describe('Game Service', () => {
     });
 
   }); //end is valid claim
+
+  describe('Handle Errors', () => {
+    it('should not create an event on success', fakeAsync(() => {
+      setupConnections(backend, {
+        body: {},
+        status: 200
+      });
+
+      service.CreateGame(2, 3);
+
+      service.EventsStream$.subscribe((event: Event) => {
+        expect(event.HasError).toBeFalsy();
+      });
+    }));
+
+    it('should create an event on error with code', fakeAsync(() => {
+      setupConnections(backend, {
+        body: {},
+        status: 404
+      });
+
+      service.CreateGame(2, 3);
+
+      service.EventsStream$.subscribe((event: Event) => {
+        expect(event.HasError).toBeTruthy();
+        expect(event.Code).toEqual(404);
+      });
+    }));
+
+  }); //end of handle errors
 
 });
